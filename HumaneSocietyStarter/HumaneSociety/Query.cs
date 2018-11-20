@@ -176,7 +176,6 @@ namespace HumaneSociety
             List<Animal> pendingAdoptions = new List<Animal>(animalFromDb);
             return pendingAdoptions;
         }
-<<<<<<< HEAD
 
         internal static List<Animal> SearchForAnimalByMultipleTraits()
         {
@@ -243,7 +242,7 @@ namespace HumaneSociety
                 }
             }
             return animals;
-=======
+        }
         
 
         internal static void UpdateAdoption(bool decision, Adoption adoption)
@@ -269,18 +268,8 @@ namespace HumaneSociety
         internal static List<AnimalShot> GetShots(Animal animal)
         {
             HumaneSocietyDataContext db = new HumaneSocietyDataContext();
-            var animalsWithShots = db.AnimalShots.Where(s => s.AnimalId == animal.AnimalId);
-
-<<<<<<< HEAD
-=======
-
-            }
-          
-            
-
-                
->>>>>>> add90498f092145e9cc6e8b3d70ce564fcb656d7
->>>>>>> d7956398d7ec4ff03077a26b213cdb1bc37df07b
+            var animalsWithShots = db.AnimalShots.Where(s => s.AnimalId == animal.AnimalId).ToList();
+            return animalsWithShots;
         }
     }
 }
