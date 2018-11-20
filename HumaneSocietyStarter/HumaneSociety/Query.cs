@@ -263,5 +263,7 @@ namespace HumaneSociety
             var animalsWithShots = db.AnimalShots.Where(s => s.AnimalId == animal.AnimalId).ToList();
             return animalsWithShots;
         }
+
+
     }
 }
