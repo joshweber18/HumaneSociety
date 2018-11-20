@@ -168,5 +168,72 @@ namespace HumaneSociety
             List<Animal> pendingAdoptions = new List<Animal>(animalFromDb);
             return pendingAdoptions;
         }
+
+        internal static List<Animal> SearchForAnimalByMultipleTraits()
+        {
+            Console.WriteLine("Please select the corresponding values, separated by a comma, to search our animals.");
+            Console.WriteLine("By Name: 1, Animal Type: 2, Demeanor: 3, Kid Friendly: 4, Pet Friendly: 5, Gender: 6, Adoption Status: 7");
+            List<string> searchCriteria = (Console.ReadLine().Split(',').ToList());
+            HumaneSocietyDataContext db = new HumaneSocietyDataContext();
+            var animals = db.Animals.ToList();
+            foreach (string s in searchCriteria)
+            {
+                int searchValue = Int32.Parse(s);
+                switch (searchValue)
+                {
+                    case 1:
+                        Console.WriteLine("Please enter the name you are looking to find.");
+                        string nameToSearch = Console.ReadLine().ToLower();
+                        animals.Where(a => a.Name.ToLower() == nameToSearch);
+                        break;
+                    case 2:
+                        Console.WriteLine("Please enter 1 for Dog, 2 for Cat, 3 for Ferret, 4 for Rabbit, or 5 for Bird");
+                        int animalSpecies = Int32.Parse(Console.ReadLine());
+                        animals.Where(a => a.CategoryId == animalSpecies);
+                        break;
+                    case 3:
+                        Console.WriteLine("Enter demeanor");
+                        string demeanorToSearch = Console.ReadLine().ToLower();
+                        animals.Where(a => a.Demeanor.ToLower() == demeanorToSearch);
+                        break;
+                    case 4:
+                        Console.WriteLine("Kid Friendly? Y or N");
+                        bool searchKidFriendly = (Console.ReadLine().ToLower() == "y");
+                        animals.Where(a => a.KidFriendly == searchKidFriendly);
+                        break;
+                    case 5:
+                        Console.WriteLine("Pet Friendly? Y or N");
+                        bool searchPetFriendly = (Console.ReadLine().ToLower() == "y");
+                        animals.Where(a => a.PetFriendly == searchPetFriendly);
+                        break;
+                    case 6:
+                        Console.WriteLine("Enter gender");
+                        string genderToSearch = Console.ReadLine().ToLower();
+                        animals.Where(a => a.Gender.ToLower() == genderToSearch);
+                        break;
+                    case 7:
+                        Console.WriteLine("Enter Adoption Status");
+                        string adoptionStatusSearch = Console.ReadLine().ToLower();
+                        animals.Where(a => a.AdoptionStatus.ToLower() == adoptionStatusSearch);
+                        break;
+                    default:
+                        Console.WriteLine("No animals match your search.");
+                        Console.WriteLine("Would you like to try again? Y or N?");
+                        var searchAgain = Console.ReadLine().ToLower();
+                        if (searchAgain == "y")
+                        {
+                            SearchForAnimalByMultipleTraits();
+                            break;
+                        }
+                        else
+                        {
+                            Console.WriteLine("No bananas are sold here.");
+                            Console.ReadLine();
+                            break;
+                        }
+                }
+            }
+            return animals;
+        }
     }
 }
