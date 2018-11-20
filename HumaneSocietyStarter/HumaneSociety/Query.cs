@@ -22,7 +22,7 @@ namespace HumaneSociety
         {
             HumaneSocietyDataContext db = new HumaneSocietyDataContext();
 
-            Client client = db.Clients.Where(c => c.Username == userName && c.Password == password).Single();
+            Client client = db.Clients.Where(c => c.UserName == userName && c.Password == password).Single();
 
             return client;
         }
@@ -59,7 +59,7 @@ namespace HumaneSociety
                 newAddress.Zipcode = zipCode;
                 newAddress.USStateId = stateId;
 
-                db.Addresses.Add(newAddress);
+                db.Addresses.InsertOnSubmit(newAddress);
                 db.SubmitChanges();
 
                 addressFromDb = newAddress;
@@ -68,7 +68,7 @@ namespace HumaneSociety
             // attach AddressId to clientFromDb.AddressId
             newClient.AddressId = addressFromDb.AddressId;
 
-            db.Clients.Add(newClient);
+            db.Clients.InsertOnSubmit(newClient);
 
             db.SubmitChanges();
         }
@@ -102,7 +102,7 @@ namespace HumaneSociety
                 newAddress.Zipcode = clientAddress.Zipcode;
                 newAddress.USStateId = clientAddress.USStateId;
 
-                db.Addresses.Add(newAddress);
+                db.Addresses.InsertOnSubmit(newAddress);
                 db.SubmitChanges();
 
                 updatedAddress = newAddress;
@@ -159,6 +159,14 @@ namespace HumaneSociety
             employeeFromDb.Password = employee.Password;
 
             db.SubmitChanges();
+        }
+
+        internal static List<Animal> GetPendingAdoptions()
+        {
+            HumaneSocietyDataContext db = new HumaneSocietyDataContext();
+            var animalFromDb = db.Animals.Where(a => a.AdoptionStatus.ToLower() == "pending");
+            List<Animal> pendingAdoptions = new List<Animal>(animalFromDb);
+            return pendingAdoptions;
         }
     }
 }
