@@ -10,3 +10,49 @@ INSERT INTO DietPlans VALUES ('Cat', 'FancyFeast', 1)
 INSERT INTO DietPlans VALUES ('Rabbit', 'GardenGoodness', 1)
 INSERT INTO DietPlans VALUES ('Ferret', 'FurSnake', 1)
 INSERT INTO DietPlans VALUES ('Bird', 'SeedyFeedy', 1)
+
+INSERT INTO Employees VALUES ('Bill', 'Scott', 'Bscotty', 'iluvbirds', 1111, 'bscotty@gmail.com')
+
+INSERT INTO Employees VALUES ('Ben', 'Hogan', 'Bhogan', 'doyouevenliftbro', 2222, 'bhogan@gmail.com')
+
+INSERT INTO Employees VALUES ('Jill', 'Owens', 'jill33', 'catlady', 3333, 'jillpickle@gmail.com')
+
+INSERT INTO Employees VALUES ('Kathy', 'Peterson', 'kathyp', 'iluvferrets', 4444, 'bigkat@gmail.com')
+INSERT INTO Employees VALUES ('Greg', 'Howen', 'gregory', 'bigballer', 5555, 'howsgreg@gmail.com')
+
+INSERT INTO Animals VALUES ('Gus', 1, 30, 2, 2, 'Friendly', 1, 1, 'NeuteredMale', 'Available', 2)
+
+INSERT INTO Animals VALUES ('Rocket', 3, 4, 3, 5, 'Inquisitive', 1, 1, 'Male', 'Available', 4)
+
+INSERT INTO Animals VALUES ('MrRumplebutt', 2, 10, 5, 3, 'Independent', 1, 0, 'NeuteredMale', 'Available', 3)
+
+INSERT INTO Animals VALUES ('Brutus', 1, 110, 2, 1, 'Gentle', 1, 1, 'NeuteredMale', 'Available', 5)
+INSERT INTO Animals VALUES ('Skyfall', 5, 1, 4, 6, 'Nibbler', 0, 0, 'Female', 'Available', 1)
+
+INSERT INTO Rooms VALUES (10, 4)
+
+INSERT INTO Rooms VALUES (11, NULL)
+
+INSERT INTO Rooms VALUES (12, 7)
+
+INSERT INTO Rooms VALUES (13, NULL)
+
+INSERT INTO Rooms VALUES (14, NULL)
+
+INSERT INTO Rooms VALUES (15, NULL)
+
+INSERT INTO Rooms VALUES (16, NULL)
+
+INSERT INTO Rooms VALUES (17, NULL)
+
+INSERT INTO Rooms VALUES (18, 6)
+
+INSERT INTO Rooms VALUES (19, NULL)
+
+INSERT INTO Rooms VALUES (20, NULL)
+
+INSERT INTO Rooms VALUES (21, 5)
+
+INSERT INTO Rooms VALUES (22, NULL)
+
+INSERT INTO Rooms VALUES (23, 8)

@@ -169,16 +169,40 @@ namespace HumaneSociety
             db.SubmitChanges();
         }
 
-        internal static void GetPendingAdoptions()
+        internal static List<Animal> GetPendingAdoptions()
         {
-           
+            HumaneSocietyDataContext db = new HumaneSocietyDataContext();
+            var animalFromDb = db.Animals.Where(a => a.AdoptionStatus.ToLower() == "pending");
+            List<Animal> pendingAdoptions = new List<Animal>(animalFromDb);
+            return pendingAdoptions;
         }
+        
 
-        internal static void UpdateAdoptions()
+        internal static void UpdateAdoptions(bool decision, Adoption adoption)
         {
             HumaneSocietyDataContext db = new HumaneSocietyDataContext();
 
-            var adoptionUpdate = db.Animals.Where(a => a == "Available");
+            if (decision == true)
+            {
+                var acceptedAdoption = db.Animals.Where(a => a.AnimalId == adoption.AnimalId).FirstOrDefault();
+                acceptedAdoption.AdoptionStatus = "Adopted";
+                db.Animals.InsertOnSubmit(acceptedAdoption);
+                db.SubmitChanges();
+            }
+            else if (decision == false)
+            {
+                var declinedAdoption = db.Animals.Where(a => a.AnimalId == adoption.AnimalId).FirstOrDefault();
+                declinedAdoption.AdoptionStatus = "Available";
+                db.Animals.InsertOnSubmit(declinedAdoption);
+                db.SubmitChanges();
+
+
+
+            }
+          
+            
+
+                
         }
     }
 }
