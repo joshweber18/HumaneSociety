@@ -178,7 +178,7 @@ namespace HumaneSociety
         }
         
 
-        internal static void UpdateAdoptions(bool decision, Adoption adoption)
+        internal static void UpdateAdoption(bool decision, Adoption adoption)
         {
             HumaneSocietyDataContext db = new HumaneSocietyDataContext();
 
@@ -195,14 +195,14 @@ namespace HumaneSociety
                 declinedAdoption.AdoptionStatus = "Available";
                 db.Animals.InsertOnSubmit(declinedAdoption);
                 db.SubmitChanges();
+            }    
+        }
 
+        internal static List<AnimalShot> GetShots(Animal animal)
+        {
+            HumaneSocietyDataContext db = new HumaneSocietyDataContext();
+            var animalsWithShots = db.AnimalShots.Where(s => s.AnimalId == animal.AnimalId);
 
-
-            }
-          
-            
-
-                
         }
     }
 }
