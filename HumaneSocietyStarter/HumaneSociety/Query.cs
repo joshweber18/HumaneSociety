@@ -245,14 +245,12 @@ namespace HumaneSociety
             {
                 var acceptedAdoption = db.Animals.Where(a => a.AnimalId == adoption.AnimalId).FirstOrDefault();
                 acceptedAdoption.AdoptionStatus = "Adopted";
-                db.Animals.InsertOnSubmit(acceptedAdoption);
                 db.SubmitChanges();
             }
             else if (decision == false)
             {
                 var declinedAdoption = db.Animals.Where(a => a.AnimalId == adoption.AnimalId).FirstOrDefault();
                 declinedAdoption.AdoptionStatus = "Available";
-                db.Animals.InsertOnSubmit(declinedAdoption);
                 db.SubmitChanges();
             }    
         }
@@ -263,7 +261,13 @@ namespace HumaneSociety
             var animalsWithShots = db.AnimalShots.Where(s => s.AnimalId == animal.AnimalId).ToList();
             return animalsWithShots;
         }
-
-
+        internal static void UpdateShot(string booster, Animal animal)
+        {
+            HumaneSocietyDataContext db = new HumaneSocietyDataContext();
+            DateTime todaysDate = DateTime.Today;
+            var animalShot = db.AnimalShots.Where(s => s.AnimalId == animal.AnimalId).Single() ;
+            animalShot.DateReceived = todaysDate;
+            db.SubmitChanges();
+        }
     }
 }
