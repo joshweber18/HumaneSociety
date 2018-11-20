@@ -1,0 +1,12 @@
+INSERT INTO Shots VALUES ('Rabies')
+INSERT INTO Shots VALUES ('Parvovirus')
+INSERT INTO Shots VALUES ('Distemper')
+INSERT INTO Shots VALUES ('Leptospirosis')
+INSERT INTO Shots VALUES ('Panleukopenia')
+
+INSERT INTO DietPlans VALUES ('LargeBreed', 'BuffaloBlue', 4)
+INSERT INTO DietPlans VALUES ('SmallBreed', 'BuffaloBlue', 2)
+INSERT INTO DietPlans VALUES ('Cat', 'FancyFeast', 1)
+INSERT INTO DietPlans VALUES ('Rabbit', 'GardenGoodness', 1)
+INSERT INTO DietPlans VALUES ('Ferret', 'FurSnake', 1)
+INSERT INTO DietPlans VALUES ('Bird', 'SeedyFeedy', 1)
