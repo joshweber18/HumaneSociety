@@ -235,5 +235,33 @@ namespace HumaneSociety
             }
             return animals;
         }
+        
+
+        internal static void UpdateAdoption(bool decision, Adoption adoption)
+        {
+            HumaneSocietyDataContext db = new HumaneSocietyDataContext();
+
+            if (decision == true)
+            {
+                var acceptedAdoption = db.Animals.Where(a => a.AnimalId == adoption.AnimalId).FirstOrDefault();
+                acceptedAdoption.AdoptionStatus = "Adopted";
+                db.Animals.InsertOnSubmit(acceptedAdoption);
+                db.SubmitChanges();
+            }
+            else if (decision == false)
+            {
+                var declinedAdoption = db.Animals.Where(a => a.AnimalId == adoption.AnimalId).FirstOrDefault();
+                declinedAdoption.AdoptionStatus = "Available";
+                db.Animals.InsertOnSubmit(declinedAdoption);
+                db.SubmitChanges();
+            }    
+        }
+
+        internal static List<AnimalShot> GetShots(Animal animal)
+        {
+            HumaneSocietyDataContext db = new HumaneSocietyDataContext();
+            var animalsWithShots = db.AnimalShots.Where(s => s.AnimalId == animal.AnimalId).ToList();
+            return animalsWithShots;
+        }
     }
 }
