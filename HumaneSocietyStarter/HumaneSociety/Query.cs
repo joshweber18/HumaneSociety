@@ -292,5 +292,12 @@ namespace HumaneSociety
             int? animalRoomNumber = animalRoom.RoomNumber;
             return animalRoomNumber;
         }
+
+        internal static void RemoveAnimal(Animal animal)
+        {
+            HumaneSocietyDataContext db = new HumaneSocietyDataContext();
+            db.Animals.DeleteOnSubmit(animal);
+            db.SubmitChanges();
+        }
     }
 }
