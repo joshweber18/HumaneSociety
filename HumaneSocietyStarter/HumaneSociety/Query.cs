@@ -309,7 +309,7 @@ namespace HumaneSociety
             Console.WriteLine("Large breed Dog, Smallb breed Dog, Cat, Rabbit, Ferret, Bird");
             string dietPlanType = Console.ReadLine();
             HumaneSocietyDataContext db = new HumaneSocietyDataContext();
-            DietPlan newDietPlan = new DietPlan
+            DietPlan newDietPlan = new DietPlan();
 
             int dietPlan = db.DietPlans.Where(d => d.Name == dietPlanType).Select(d => d.DietPlanId).Single();
             return dietPlan;
@@ -328,6 +328,21 @@ namespace HumaneSociety
         {
             HumaneSocietyDataContext db = new HumaneSocietyDataContext();
             db.Animals.DeleteOnSubmit(animal);
+            db.SubmitChanges();
+        }
+
+        internal static Animal GetAnimalByID(int ID)
+        {
+            HumaneSocietyDataContext db = new HumaneSocietyDataContext();
+            Animal animal = db.Animals.Where(a => a.AnimalId == ID).Select(a => a).Single();
+            return animal;
+        }
+
+        internal static void Adopt(Animal animal, Client client)
+        {
+            HumaneSocietyDataContext db = new HumaneSocietyDataContext();
+            var updateAdoptionStatus = db.Animals.Where(a => a.AdoptionStatus.ToLower() == "available").Select(a => a).Single();
+            updateAdoptionStatus.AdoptionStatus = "Pending";
             db.SubmitChanges();
         }
     }
