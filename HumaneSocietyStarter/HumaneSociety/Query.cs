@@ -177,6 +177,21 @@ namespace HumaneSociety
             return pendingAdoptions; 
         }
 
+        internal static void EnterAnimalUpdate(Animal animal, Dictionary<int, string> animalInfo)
+        {
+            animal = new Animal();
+            HumaneSocietyDataContext db = new HumaneSocietyDataContext();
+            animal.CategoryId = Int32.Parse(animalInfo[1]);
+            animal.Name = animalInfo[2];
+            animal.Age = Int32.Parse(animalInfo[3]);
+            animal.Demeanor = animalInfo[4];
+            animal.KidFriendly = bool.Parse(animalInfo[5]);
+            animal.PetFriendly = bool.Parse(animalInfo[6]);
+            animal.Weight = Int32.Parse(animalInfo[7]);
+            db.Animals.InsertOnSubmit(animal);
+            db.SubmitChanges();
+        }
+
         internal static List<Animal> SearchForAnimalByMultipleTraits()
         {
             Console.WriteLine("Please select the corresponding values, separated by a comma, to search our animals.");
@@ -268,7 +283,6 @@ namespace HumaneSociety
             var animalsWithShots = db.AnimalShots.Where(s => s.AnimalId == animal.AnimalId).ToList();
             return animalsWithShots;
         }
-
         internal static void UpdateShot(string booster, Animal animal)
         {
             HumaneSocietyDataContext db = new HumaneSocietyDataContext();
@@ -299,9 +313,15 @@ namespace HumaneSociety
 
             int dietPlan = db.DietPlans.Where(d => d.Name == dietPlanType).Select(d => d.DietPlanId).Single();
             return dietPlan;
-            
-            
+        }   
+        
 
+        internal static int? GetRoom(Animal animal)
+        {
+            HumaneSocietyDataContext db = new HumaneSocietyDataContext();
+            var animalRoom = db.Rooms.Where(r => r.AnimalId == animal.AnimalId).Single();
+            int? animalRoomNumber = animalRoom.RoomNumber;
+            return animalRoomNumber;
         }
     }
 }
