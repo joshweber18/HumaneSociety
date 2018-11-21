@@ -294,7 +294,7 @@ namespace HumaneSociety
 
         internal static int GetCategoryId()
         {
-            Console.WriteLine("Please select the corresponding number value, to assign an animal to a category id.");
+            Console.WriteLine("Please select the corresponding value, to assign an animal to a category id.");
             Console.WriteLine(" Dog, Cat, Ferret, Rabbit, Bird");
             string animalType = Console.ReadLine();
             HumaneSocietyDataContext db = new HumaneSocietyDataContext();
@@ -305,19 +305,37 @@ namespace HumaneSociety
 
         internal static int GetDietPlanId()
         {
-            Console.WriteLine("Please select the corresponding number value, to assign an animal to a diet plan id.");
-            Console.WriteLine("Large breed Dog, Smallb breed Dog, Cat, Rabbit, Ferret, Bird");
+            Console.WriteLine("Please select the corresponding name, to assign an animal to a diet plan id.");
+            Console.WriteLine("Large breed dog, Small breed dog, Cat, Rabbit, Ferret, Bird");
             string dietPlanType = Console.ReadLine();
             HumaneSocietyDataContext db = new HumaneSocietyDataContext();
-            DietPlan newDietPlan = new DietPlan
+            
+            DietPlan newDietPlan = db.DietPlans.Where(d => d.Name == dietPlanType).FirstOrDefault();
+            if (newDietPlan == null)
+            {
+                DietPlan newPlan = new DietPlan();
+                Console.WriteLine("What is the foodtype of the diet?");
+                newPlan.FoodType = Console.ReadLine();
+                Console.WriteLine("Enter the food amount in cups.");
+                newPlan.FoodAmountInCups = Int32.Parse(Console.ReadLine());
+                newPlan.Name = dietPlanType;
 
-            int dietPlan = db.DietPlans.Where(d => d.Name == dietPlanType).Select(d => d.DietPlanId).Single();
-            return dietPlan;
+                db.DietPlans.InsertOnSubmit(newPlan);
+                db.SubmitChanges();
+
+                return newPlan.DietPlanId;
+            }
+            else
+            {
+                return newDietPlan.DietPlanId;
+            }
+           
         }   
         
 
         internal static int? GetRoom(Animal animal)
         {
+            Console.WriteLine("Please select the corresponding value, to assign an animal to a room.");
             HumaneSocietyDataContext db = new HumaneSocietyDataContext();
             var animalRoom = db.Rooms.Where(r => r.AnimalId == animal.AnimalId).Single();
             int? animalRoomNumber = animalRoom.RoomNumber;
