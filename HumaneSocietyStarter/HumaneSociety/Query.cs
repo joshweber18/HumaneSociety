@@ -309,6 +309,7 @@ namespace HumaneSociety
             Console.WriteLine("Large breed dog, Small breed dog, Cat, Rabbit, Ferret, Bird");
             string dietPlanType = Console.ReadLine();
             HumaneSocietyDataContext db = new HumaneSocietyDataContext();
+
             
             DietPlan newDietPlan = db.DietPlans.Where(d => d.Name == dietPlanType).FirstOrDefault();
             if (newDietPlan == null)
@@ -322,6 +323,8 @@ namespace HumaneSociety
 
                 db.DietPlans.InsertOnSubmit(newPlan);
                 db.SubmitChanges();
+            // DietPlan newDietPlan = new DietPlan();
+
 
                 return newPlan.DietPlanId;
             }
@@ -340,6 +343,28 @@ namespace HumaneSociety
             var animalRoom = db.Rooms.Where(r => r.AnimalId == animal.AnimalId).Single();
             int? animalRoomNumber = animalRoom.RoomNumber;
             return animalRoomNumber;
+        }
+
+        internal static void RemoveAnimal(Animal animal)
+        {
+            HumaneSocietyDataContext db = new HumaneSocietyDataContext();
+            db.Animals.DeleteOnSubmit(animal);
+            db.SubmitChanges();
+        }
+
+        internal static Animal GetAnimalByID(int ID)
+        {
+            HumaneSocietyDataContext db = new HumaneSocietyDataContext();
+            Animal animal = db.Animals.Where(a => a.AnimalId == ID).Select(a => a).Single();
+            return animal;
+        }
+
+        internal static void Adopt(Animal animal, Client client)
+        {
+            HumaneSocietyDataContext db = new HumaneSocietyDataContext();
+            var updateAdoptionStatus = db.Animals.Where(a => a.AdoptionStatus.ToLower() == "available").Select(a => a).Single();
+            updateAdoptionStatus.AdoptionStatus = "Pending";
+            db.SubmitChanges();
         }
     }
 }
