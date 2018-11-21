@@ -61,13 +61,13 @@ namespace HumaneSociety
         private void CheckAdoptions()
         {
             Console.Clear();
-            List<string> adoptionInfo = new List<string>();
+            List<string> adoptionInfo = new List<string>();            
             int counter = 1;
             var adoptions = Query.GetPendingAdoptions().ToList();
             if(adoptions.Count > 0)
             {
                 foreach(Adoption adoption in adoptions)
-                {
+                {                 
                     adoptionInfo.Add($"{counter}. {adoption.Client.FirstName} {adoption.Client.LastName}, {adoption.Animal.Name} {adoption.Animal.Category}");
                     counter++;
                 }
@@ -75,8 +75,7 @@ namespace HumaneSociety
                 UserInterface.DisplayUserOptions("Enter the number of the adoption you would like to approve");
                 int input = UserInterface.GetIntegerData();
                 ApproveAdoption(adoptions[input - 1]);
-            }
-            
+            }            
         }
 
         private void ApproveAdoption(Adoption adoption)

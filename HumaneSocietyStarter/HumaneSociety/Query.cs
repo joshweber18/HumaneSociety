@@ -169,6 +169,13 @@ namespace HumaneSociety
             return pendingAdoptions;
         }
 
+        internal static void EnterAnimalUpdate(Animal animal, Dictionary<int, string> animalInfo)
+        {
+            animal = new Animal();
+            HumaneSocietyDataContext db = new HumaneSocietyDataContext();
+            db.Animals.InsertOnSubmit;
+        }
+
         internal static List<Animal> SearchForAnimalByMultipleTraits()
         {
             Console.WriteLine("Please select the corresponding values, separated by a comma, to search our animals.");
@@ -268,6 +275,14 @@ namespace HumaneSociety
             var animalShot = db.AnimalShots.Where(s => s.AnimalId == animal.AnimalId).Single() ;
             animalShot.DateReceived = todaysDate;
             db.SubmitChanges();
+        }
+
+        internal static int? GetRoom(Animal animal)
+        {
+            HumaneSocietyDataContext db = new HumaneSocietyDataContext();
+            var animalRoom = db.Rooms.Where(r => r.AnimalId == animal.AnimalId).Single();
+            int? animalRoomNumber = animalRoom.RoomNumber;
+            return animalRoomNumber;
         }
     }
 }
