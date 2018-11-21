@@ -85,6 +85,7 @@ namespace HumaneSociety
             {
                 Employee employee = new Employee();
                 employee.EmployeeNumber = int.Parse(UserInterface.GetStringData("employee number", "the employee's"));
+                
                 Query.RunEmployeeQueries(employee, "read");
             }
             catch
@@ -103,6 +104,7 @@ namespace HumaneSociety
             try
             {
                 Console.Clear();
+                
                 Query.RunEmployeeQueries(employee, "delete");
                 UserInterface.DisplayUserOptions("Employee successfully removed");
             }
@@ -123,6 +125,7 @@ namespace HumaneSociety
             employee.Email = UserInterface.GetStringData("email", "the employee's"); ;
             try
             {
+                
                 Query.RunEmployeeQueries(employee, "create");
                 UserInterface.DisplayUserOptions("Employee addition successful.");
             }

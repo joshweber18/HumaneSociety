@@ -11,7 +11,7 @@ namespace HumaneSociety
 
         internal static List<USState> GetStates()
         {
-            HumaneSocietyDataContext  db = new HumaneSocietyDataContext();
+            HumaneSocietyDataContext db = new HumaneSocietyDataContext();
 
             List<USState> allStates = db.USStates.ToList();
 
@@ -29,16 +29,24 @@ namespace HumaneSociety
 
         internal static List<Client> GetClients()
         {
-            HumaneSocietyDataContext  db = new HumaneSocietyDataContext();
+            HumaneSocietyDataContext db = new HumaneSocietyDataContext();
 
             List<Client> allClients = db.Clients.ToList();
 
             return allClients;
         }
 
+        internal static void AddAnimal(Animal animal)
+        {
+            HumaneSocietyDataContext db = new HumaneSocietyDataContext();
+
+            db.Animals.InsertOnSubmit(animal);
+            db.SubmitChanges();
+        }
+
         internal static void AddNewClient(string firstName, string lastName, string username, string password, string email, string streetAddress, int zipCode, int stateId)
         {
-            HumaneSocietyDataContext  db = new HumaneSocietyDataContext();
+            HumaneSocietyDataContext db = new HumaneSocietyDataContext();
 
             Client newClient = new Client();
 
@@ -60,7 +68,7 @@ namespace HumaneSociety
                 newAddress.USStateId = stateId;
 
                 db.Addresses.InsertOnSubmit(newAddress);
-                db.SubmitChanges();
+                db.SubmitChanges(); // this is where a primary key gets generated
 
                 addressFromDb = newAddress;
             }
@@ -75,7 +83,7 @@ namespace HumaneSociety
 
         internal static void UpdateClient(Client clientWithUpdates)
         {
-            HumaneSocietyDataContext  db = new HumaneSocietyDataContext();
+            HumaneSocietyDataContext db = new HumaneSocietyDataContext();
 
             // find corresponding Client from Db
             Client clientFromDb = db.Clients.Where(c => c.ClientId == clientWithUpdates.ClientId).Single();
@@ -94,7 +102,7 @@ namespace HumaneSociety
             Address updatedAddress = db.Addresses.Where(a => a.AddressLine1 == clientAddress.AddressLine1 && a.USStateId == clientAddress.USStateId && a.Zipcode == clientAddress.Zipcode).FirstOrDefault();
 
             // if the address isn't found in the Db, create and insert it
-            if(updatedAddress == null)
+            if (updatedAddress == null)
             {
                 Address newAddress = new Address();
                 newAddress.AddressLine1 = clientAddress.AddressLine1;
@@ -110,30 +118,30 @@ namespace HumaneSociety
 
             // attach AddressId to clientFromDb.AddressId
             clientFromDb.AddressId = updatedAddress.AddressId;
-            
+
             // submit changes
             db.SubmitChanges();
         }
 
         internal static Employee RetrieveEmployeeUser(string email, int employeeNumber)
         {
-            HumaneSocietyDataContext  db = new HumaneSocietyDataContext();
+            HumaneSocietyDataContext db = new HumaneSocietyDataContext();
 
             Employee employeeFromDb = db.Employees.Where(e => e.Email == email && e.EmployeeNumber == employeeNumber).FirstOrDefault();
 
-            if(employeeFromDb == null)
+            if (employeeFromDb == null)
             {
-                throw new NullReferenceException();            
+                throw new NullReferenceException();
             }
             else
             {
                 return employeeFromDb;
-            }            
+            }
         }
 
         internal static Employee EmployeeLogin(string userName, string password)
         {
-            HumaneSocietyDataContext  db = new HumaneSocietyDataContext();
+            HumaneSocietyDataContext db = new HumaneSocietyDataContext();
 
             Employee employeeFromDb = db.Employees.Where(e => e.UserName == userName && e.Password == password).FirstOrDefault();
 
@@ -142,7 +150,7 @@ namespace HumaneSociety
 
         internal static bool CheckEmployeeUserNameExist(string userName)
         {
-            HumaneSocietyDataContext  db = new HumaneSocietyDataContext();
+            HumaneSocietyDataContext db = new HumaneSocietyDataContext();
 
             Employee employeeWithUserName = db.Employees.Where(e => e.UserName == userName).FirstOrDefault();
 
@@ -151,7 +159,7 @@ namespace HumaneSociety
 
         internal static void AddUsernameAndPassword(Employee employee)
         {
-            HumaneSocietyDataContext  db = new HumaneSocietyDataContext();
+            HumaneSocietyDataContext db = new HumaneSocietyDataContext();
 
             Employee employeeFromDb = db.Employees.Where(e => e.EmployeeId == employee.EmployeeId).FirstOrDefault();
 
@@ -161,12 +169,12 @@ namespace HumaneSociety
             db.SubmitChanges();
         }
 
-        internal static List<Animal> GetPendingAdoptions()
+        internal static List<Adoption> GetPendingAdoptions()
         {
             HumaneSocietyDataContext db = new HumaneSocietyDataContext();
-            var animalFromDb = db.Animals.Where(a => a.AdoptionStatus.ToLower() == "pending");
-            List<Animal> pendingAdoptions = new List<Animal>(animalFromDb);
-            return pendingAdoptions;
+            
+            var pendingAdoptions = db.Adoptions.Where(a => a.ApprovalStatus == "pending").ToList();
+            return pendingAdoptions; 
         }
 
         internal static List<Animal> SearchForAnimalByMultipleTraits()
@@ -235,7 +243,6 @@ namespace HumaneSociety
             }
             return animals;
         }
-        
 
         internal static void UpdateAdoption(bool decision, Adoption adoption)
         {
@@ -269,6 +276,31 @@ namespace HumaneSociety
             var animalShot = db.AnimalShots.Where(s => s.AnimalId == animal.AnimalId).Single() ;
             animalShot.DateReceived = todaysDate;
             db.SubmitChanges();
+        }
+
+        internal static int GetCategoryId()
+        {
+            Console.WriteLine("Please select the corresponding number value, to assign an animal to a category id.");
+            Console.WriteLine(" Dog, Cat, Ferret, Rabbit, Bird");
+            string animalType = Console.ReadLine();
+            HumaneSocietyDataContext db = new HumaneSocietyDataContext();
+
+            int id = db.Categories.Where(c => c.Name == animalType).Select(c => c.CategoryId).Single();
+            return id;
+        }
+
+        internal static int GetDietPlanId()
+        {
+            Console.WriteLine("Please select the corresponding number value, to assign an animal to a diet plan id.");
+            Console.WriteLine("Large breed Dog, Smallb breed Dog, Cat, Rabbit, Ferret, Bird");
+            string dietPlanType = Console.ReadLine();
+            HumaneSocietyDataContext db = new HumaneSocietyDataContext();
+            DietPlan newDietPlan = new DietPlan
+
+            int dietPlan = db.DietPlans.Where(d => d.Name == dietPlanType).Select(d => d.DietPlanId).Single();
+            return dietPlan;
+            
+            
 
         }
     }
