@@ -173,7 +173,15 @@ namespace HumaneSociety
         {
             animal = new Animal();
             HumaneSocietyDataContext db = new HumaneSocietyDataContext();
-            db.Animals.InsertOnSubmit;
+            animal.CategoryId = Int32.Parse(animalInfo[1]);
+            animal.Name = animalInfo[2];
+            animal.Age = Int32.Parse(animalInfo[3]);
+            animal.Demeanor = animalInfo[4];
+            animal.KidFriendly = bool.Parse(animalInfo[5]);
+            animal.PetFriendly = bool.Parse(animalInfo[6]);
+            animal.Weight = Int32.Parse(animalInfo[7]);
+            db.Animals.InsertOnSubmit(animal);
+            db.SubmitChanges();
         }
 
         internal static List<Animal> SearchForAnimalByMultipleTraits()
