@@ -323,9 +323,7 @@ namespace HumaneSociety
 
                 db.DietPlans.InsertOnSubmit(newPlan);
                 db.SubmitChanges();
-            // DietPlan newDietPlan = new DietPlan();
-
-
+            
                 return newPlan.DietPlanId;
             }
             else
@@ -334,15 +332,17 @@ namespace HumaneSociety
             }
            
         }   
-        
+        internal static void RunEmployeeQueries(Employee employee, string queryAction)
+        {
 
-        internal static int? GetRoom(Animal animal)
+        }
+
+        internal static Room GetRoom(Animal animal)
         {
             Console.WriteLine("Please select the corresponding value, to assign an animal to a room.");
             HumaneSocietyDataContext db = new HumaneSocietyDataContext();
             var animalRoom = db.Rooms.Where(r => r.AnimalId == animal.AnimalId).Single();
-            int? animalRoomNumber = animalRoom.RoomNumber;
-            return animalRoomNumber;
+            return animalRoom;
         }
 
         internal static void RemoveAnimal(Animal animal)
