@@ -323,8 +323,6 @@ namespace HumaneSociety
 
                 db.DietPlans.InsertOnSubmit(newPlan);
                 db.SubmitChanges();
-            // DietPlan newDietPlan = new DietPlan();
-
 
                 return newPlan.DietPlanId;
             }
