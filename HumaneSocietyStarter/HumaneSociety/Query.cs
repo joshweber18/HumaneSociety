@@ -208,7 +208,7 @@ namespace HumaneSociety
                         Console.WriteLine("Please enter the name you are looking to find.");
                         string nameToSearch = Console.ReadLine().ToLower();
                         animals.Where(a => a.Name.ToLower() == nameToSearch);
-                        break;
+                        break;                        
                     case 2:
                         Console.WriteLine("Please enter 1 for Dog, 2 for Cat, 3 for Ferret, 4 for Rabbit, or 5 for Bird");
                         int animalSpecies = Int32.Parse(Console.ReadLine());
