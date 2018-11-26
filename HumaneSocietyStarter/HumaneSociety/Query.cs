@@ -199,6 +199,7 @@ namespace HumaneSociety
             List<string> searchCriteria = (Console.ReadLine().Split(',').ToList());
             HumaneSocietyDataContext db = new HumaneSocietyDataContext();
             var animals = db.Animals.ToList();
+            List<Animal> filteredAnimals = animals;
             foreach (string s in searchCriteria)
             {
                 int searchValue = Int32.Parse(s);
@@ -207,7 +208,7 @@ namespace HumaneSociety
                     case 1:
                         Console.WriteLine("Please enter the name you are looking to find.");
                         string nameToSearch = Console.ReadLine().ToLower();
-                        animals.Where(a => a.Name.ToLower() == nameToSearch);
+                        filteredAnimals = animals.Where(a => a.Name.ToLower() == nameToSearch).ToList();
                         break;                        
                     case 2:
                         Console.WriteLine("Please enter 1 for Dog, 2 for Cat, 3 for Ferret, 4 for Rabbit, or 5 for Bird");
@@ -256,6 +257,7 @@ namespace HumaneSociety
                         }
                 }
             }
+            animals = filteredAnimals;
             return animals;
         }
 
@@ -295,7 +297,7 @@ namespace HumaneSociety
         internal static int GetCategoryId()
         {
             Console.WriteLine("Please select the corresponding value, to assign an animal to a category id.");
-            Console.WriteLine(" Dog, Cat, Ferret, Rabbit, Bird");
+            Console.WriteLine("Dog, Cat, Ferret, Rabbit, Bird");
             string animalType = Console.ReadLine();
             HumaneSocietyDataContext db = new HumaneSocietyDataContext();
 
@@ -362,8 +364,9 @@ namespace HumaneSociety
         internal static void Adopt(Animal animal, Client client)
         {
             HumaneSocietyDataContext db = new HumaneSocietyDataContext();
-            var updateAdoptionStatus = db.Animals.Where(a => a.AdoptionStatus.ToLower() == "available").Select(a => a).Single();
-            updateAdoptionStatus.AdoptionStatus = "Pending";
+            Animal animalToAdopt = animal;
+            animalToAdopt = db.Animals.Where(a => (a.Name == animalToAdopt.Name) && (animalToAdopt.AdoptionStatus.ToLower() == "available")).Select(a => a).FirstOrDefault();
+            animalToAdopt.AdoptionStatus = "Pending";
             db.SubmitChanges();
         }
     }
