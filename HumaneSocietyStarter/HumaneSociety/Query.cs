@@ -290,7 +290,7 @@ namespace HumaneSociety
         {
             HumaneSocietyDataContext db = new HumaneSocietyDataContext();
             DateTime todaysDate = DateTime.Today;
-            var animalShot = db.AnimalShots.Where(s => s.AnimalId == animal.AnimalId).Single() ;
+            var animalShot = db.AnimalShots.Where(s => s.AnimalId == animal.AnimalId).FirstOrDefault() ;
             animalShot.DateReceived = todaysDate;
             db.SubmitChanges();
         }
@@ -302,7 +302,7 @@ namespace HumaneSociety
             string animalType = Console.ReadLine();
             HumaneSocietyDataContext db = new HumaneSocietyDataContext();
 
-            int id = db.Categories.Where(c => c.Name == animalType).Select(c => c.CategoryId).Single();
+            int id = db.Categories.Where(c => c.Name == animalType).Select(c => c.CategoryId).FirstOrDefault();
             return id;
         }
 
@@ -367,7 +367,18 @@ namespace HumaneSociety
             Animal animalToAdopt = animal;
             animalToAdopt = db.Animals.Where(a => (a.Name == animalToAdopt.Name) && (animalToAdopt.AdoptionStatus.ToLower() == "available")).Select(a => a).FirstOrDefault();
             animalToAdopt.AdoptionStatus = "Pending";
+            
             db.SubmitChanges();
         }
+        internal static void SetRoom(Animal animal)
+        {
+            HumaneSocietyDataContext db = new HumaneSocietyDataContext();
+            Random random = new Random();
+            Room room = db.Rooms.Where(r => r.RoomId == random.Next(15)).FirstOrDefault();            
+            //room.RoomId = random.Next(15);
+            room.AnimalId = animal.AnimalId;
+            db.SubmitChanges();
+        }
+    
     }
 }

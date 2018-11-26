@@ -243,7 +243,7 @@ namespace HumaneSociety
             }
         }
         private void AddAnimal()
-        {
+        {          
             Console.Clear();
             Animal animal = new Animal();
             animal.CategoryId = Query.GetCategoryId();
@@ -255,7 +255,9 @@ namespace HumaneSociety
             animal.Weight = UserInterface.GetIntegerData("the animal", "the weight of the");
             animal.DietPlanId = Query.GetDietPlanId();
             Query.AddAnimal(animal);
+            Query.SetRoom(animal);
         }
+
         protected override void LogInPreExistingUser()
         {
             List<string> options = new List<string>() { "Please log in", "Enter your username (CaSe SeNsItIvE)" };
