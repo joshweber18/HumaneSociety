@@ -143,7 +143,7 @@ namespace HumaneSociety
         {
             HumaneSocietyDataContext db = new HumaneSocietyDataContext();
 
-            Employee employeeFromDb = db.Employees.Where(e => e.UserName == userName && e.Password == password).FirstOrDefault();
+            Employee employeeFromDb = db.Employees.Where(e => e.UserName == userName && e.Password == password).First();
 
             return employeeFromDb;
         }
@@ -202,43 +202,44 @@ namespace HumaneSociety
             List<Animal> filteredAnimals = animals;
             foreach (string s in searchCriteria)
             {
+                
                 int searchValue = Int32.Parse(s);
                 switch (searchValue)
                 {
                     case 1:
                         Console.WriteLine("Please enter the name you are looking to find.");
                         string nameToSearch = Console.ReadLine().ToLower();
-                        filteredAnimals = animals.Where(a => a.Name.ToLower() == nameToSearch).ToList();
-                        break;                        
+                        filteredAnimals = db.Animals.Where(a => a.Name.ToLower() == nameToSearch).ToList();
+                        break;
                     case 2:
                         Console.WriteLine("Please enter 1 for Dog, 2 for Cat, 3 for Ferret, 4 for Rabbit, or 5 for Bird");
                         int animalSpecies = Int32.Parse(Console.ReadLine());
-                        animals.Where(a => a.CategoryId == animalSpecies);
+                        filteredAnimals = db.Animals.Where(a => a.CategoryId == animalSpecies).ToList();
                         break;
                     case 3:
                         Console.WriteLine("Enter demeanor");
                         string demeanorToSearch = Console.ReadLine().ToLower();
-                        animals.Where(a => a.Demeanor.ToLower() == demeanorToSearch);
+                        filteredAnimals = db.Animals.Where(a => a.Demeanor.ToLower() == demeanorToSearch).ToList();
                         break;
                     case 4:
                         Console.WriteLine("Kid Friendly? Y or N");
                         bool searchKidFriendly = (Console.ReadLine().ToLower() == "y");
-                        animals.Where(a => a.KidFriendly == searchKidFriendly);
+                        filteredAnimals = db.Animals.Where(a => a.KidFriendly == searchKidFriendly).ToList();
                         break;
                     case 5:
                         Console.WriteLine("Pet Friendly? Y or N");
                         bool searchPetFriendly = (Console.ReadLine().ToLower() == "y");
-                        animals.Where(a => a.PetFriendly == searchPetFriendly);
+                        filteredAnimals = db.Animals.Where(a => a.PetFriendly == searchPetFriendly).ToList();
                         break;
                     case 6:
                         Console.WriteLine("Enter gender");
                         string genderToSearch = Console.ReadLine().ToLower();
-                        animals.Where(a => a.Gender.ToLower() == genderToSearch);
+                        filteredAnimals = db.Animals.Where(a => a.Gender.ToLower() == genderToSearch).ToList();
                         break;
                     case 7:
                         Console.WriteLine("Enter Adoption Status");
                         string adoptionStatusSearch = Console.ReadLine().ToLower();
-                        animals.Where(a => a.AdoptionStatus.ToLower() == adoptionStatusSearch);
+                        filteredAnimals = db.Animals.Where(a => a.AdoptionStatus.ToLower() == adoptionStatusSearch).ToList();
                         break;
                     default:
                         Console.WriteLine("No animals match your search.");
@@ -325,7 +326,6 @@ namespace HumaneSociety
 
                 db.DietPlans.InsertOnSubmit(newPlan);
                 db.SubmitChanges();
-            
                 return newPlan.DietPlanId;
             }
             else
@@ -341,16 +341,16 @@ namespace HumaneSociety
 
         internal static Room GetRoom(Animal animal)
         {
-            Console.WriteLine("Please select the corresponding value, to assign an animal to a room.");
             HumaneSocietyDataContext db = new HumaneSocietyDataContext();
-            var animalRoom = db.Rooms.Where(r => r.AnimalId == animal.AnimalId).Single();
+            Room animalRoom = db.Rooms.Where(r => r.AnimalId == animal.AnimalId).FirstOrDefault();
             return animalRoom;
         }
 
         internal static void RemoveAnimal(Animal animal)
         {
             HumaneSocietyDataContext db = new HumaneSocietyDataContext();
-            db.Animals.DeleteOnSubmit(animal);
+            Animal theAnimal = db.Animals.Where(a => a.AnimalId == animal.AnimalId).FirstOrDefault();
+            db.Animals.DeleteOnSubmit(theAnimal);
             db.SubmitChanges();
         }
 
