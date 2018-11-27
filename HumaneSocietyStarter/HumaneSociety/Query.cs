@@ -172,7 +172,7 @@ namespace HumaneSociety
         internal static List<Adoption> GetPendingAdoptions()
         {
             HumaneSocietyDataContext db = new HumaneSocietyDataContext();
-            var pendingAdoptions = db.Adoptions.Where(a => a.ApprovalStatus == "pending").ToList();
+            var pendingAdoptions = db.Adoptions.Where(a => a.ApprovalStatus.ToLower() == "pending").ToList();
             return pendingAdoptions; 
         }
 
@@ -389,12 +389,20 @@ namespace HumaneSociety
             HumaneSocietyDataContext db = new HumaneSocietyDataContext();
             Animal animalToAdopt = animal;
             Client currentClient = client;
-            var adoption = db.Adoptions.Where(a => a.AnimalId == animal.AnimalId).Single();
-            adoption.ClientId = client.ClientId;
-            animalToAdopt = db.Animals.Where(a => (a.Name == animalToAdopt.Name) && (animalToAdopt.AdoptionStatus.ToLower() == "available")).Select(a => a).FirstOrDefault();
-            animalToAdopt.AdoptionStatus = "Pending";
-            
-            db.SubmitChanges();
+            Adoption adoption = new Adoption();
+            animalToAdopt = db.Animals.Where(a => a.Name == animalToAdopt.Name).Select(a => a).FirstOrDefault();
+            if (animalToAdopt.AdoptionStatus.ToLower() == "available")
+            {
+                db.Adoptions.InsertOnSubmit(adoption);
+                animalToAdopt.AdoptionStatus = "Pending";
+                adoption.ClientId = client.ClientId;
+                db.SubmitChanges();
+            }
+            else
+            {
+                Console.WriteLine("This animal is not available for adoption");
+                Console.ReadLine();               
+            }
         }
         internal static void SetRoom(Animal animal)
         {
