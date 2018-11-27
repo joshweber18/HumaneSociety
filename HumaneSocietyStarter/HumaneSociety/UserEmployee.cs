@@ -245,6 +245,7 @@ namespace HumaneSociety
         private void AddAnimal()
         {          
             Console.Clear();
+            Query.CheckRoomAvailability();
             Animal animal = new Animal();
             animal.CategoryId = Query.GetCategoryId();
             animal.Name = UserInterface.GetStringData("name", "the animal's");
