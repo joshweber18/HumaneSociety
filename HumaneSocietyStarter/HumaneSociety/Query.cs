@@ -319,15 +319,21 @@ namespace HumaneSociety
         internal static List<AnimalShot> GetShots(Animal animal)
         {
             HumaneSocietyDataContext db = new HumaneSocietyDataContext();
-            var animalsWithShots = db.AnimalShots.Where(s => s.AnimalId == animal.AnimalId).ToList();
+            List<AnimalShot> animalsWithShots = db.AnimalShots.Where(s => s.AnimalId == animal.AnimalId).ToList();
             return animalsWithShots;
         }
-        internal static void UpdateShot(string booster, Animal animal)
+
+        internal static void UpdateShot(int booster, Animal animal)
         {
             HumaneSocietyDataContext db = new HumaneSocietyDataContext();
-            DateTime todaysDate = DateTime.Today;
-            var animalShot = db.AnimalShots.Where(s => s.AnimalId == animal.AnimalId).FirstOrDefault() ;
-            animalShot.DateReceived = todaysDate;
+            //var animalShot = db.AnimalShots.Where(s => s.AnimalId == animal.AnimalId).SingleOrDefault();
+          
+            AnimalShot shot = new AnimalShot();
+            shot.AnimalId = animal.AnimalId;
+            shot.ShotId = booster;
+            shot.DateReceived = DateTime.Now;
+            db.AnimalShots.InsertOnSubmit(shot);
+
             db.SubmitChanges();
         }
 
@@ -384,7 +390,6 @@ namespace HumaneSociety
                 Room adoptedAnimalRoom = new Room();
                 adoptedAnimalRoom.RoomNumber = 0;
                 adoptedAnimalRoom.AnimalId = animal.AnimalId;
-                // adoptedAnimalRoom.RoomId = db.Rooms.Count() + 1;
                 db.Rooms.InsertOnSubmit(adoptedAnimalRoom);                
                 db.SubmitChanges();
                 animalRoom = adoptedAnimalRoom;
@@ -410,6 +415,11 @@ namespace HumaneSociety
         internal static void Adopt(Animal animal, Client client)
         {
             HumaneSocietyDataContext db = new HumaneSocietyDataContext();
+            var animalAdoption = db.Adoptions.Where(a => a.AnimalId == animal.AnimalId).Single();
+            animalAdoption.ClientId = client.ClientId;
+            animal = db.Animals.Where(a => (a.Name == animal.Name) && (animal.AdoptionStatus.ToLower() == "available")).Select(a => a).FirstOrDefault();
+            animal.AdoptionStatus = "Pending";
+            db.SubmitChanges();
             Animal animalToAdopt = animal;
             Client currentClient = client;
             Adoption adoption = new Adoption();
@@ -432,6 +442,7 @@ namespace HumaneSociety
                 Console.ReadLine();               
             }
         }
+
         internal static void SetRoom(Animal animal)
         {
             HumaneSocietyDataContext db = new HumaneSocietyDataContext();
