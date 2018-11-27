@@ -172,7 +172,6 @@ namespace HumaneSociety
         internal static List<Adoption> GetPendingAdoptions()
         {
             HumaneSocietyDataContext db = new HumaneSocietyDataContext();
-            
             var pendingAdoptions = db.Adoptions.Where(a => a.ApprovalStatus == "pending").ToList();
             return pendingAdoptions; 
         }
@@ -367,6 +366,15 @@ namespace HumaneSociety
             var updateAdoptionStatus = db.Animals.Where(a => a.AdoptionStatus.ToLower() == "available").Select(a => a).Single();
             updateAdoptionStatus.AdoptionStatus = "Pending";
             db.SubmitChanges();
+        }
+
+        internal static void SetRoom(Animal animal)
+        {
+            HumaneSocietyDataContext db = new HumaneSocietyDataContext();
+            Room newRoom = db.Rooms.Where(r => r.AnimalId == animal.AnimalId).FirstOrDefault();
+            newRoom.RoomNumber = newRoom.RoomId;
+            db.SubmitChanges();
+      
         }
     }
 }
