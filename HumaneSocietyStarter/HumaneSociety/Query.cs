@@ -311,12 +311,18 @@ namespace HumaneSociety
             List<AnimalShot> animalsWithShots = db.AnimalShots.Where(s => s.AnimalId == animal.AnimalId).ToList();
             return animalsWithShots;
         }
-        internal static void UpdateShot(string booster, Animal animal)
+
+        internal static void UpdateShot(int booster, Animal animal)
         {
             HumaneSocietyDataContext db = new HumaneSocietyDataContext();
-            DateTime todaysDate = DateTime.Today;
-            var animalShot = db.AnimalShots.Where(s => s.AnimalId == animal.AnimalId).FirstOrDefault() ;
-            animalShot.DateReceived = todaysDate;
+            //var animalShot = db.AnimalShots.Where(s => s.AnimalId == animal.AnimalId).SingleOrDefault();
+          
+            AnimalShot shot = new AnimalShot();
+            shot.AnimalId = animal.AnimalId;
+            shot.ShotId = booster;
+            shot.DateReceived = DateTime.Now;
+            db.AnimalShots.InsertOnSubmit(shot);
+
             db.SubmitChanges();
         }
 

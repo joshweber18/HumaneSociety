@@ -158,26 +158,58 @@ namespace HumaneSociety
         {
             List<string> shotInfo = new List<string>();
             var shots = Query.GetShots(animal);
-            foreach(AnimalShot shot in shots.ToList())
+            if (shots.Count == 0)
             {
-                shotInfo.Add($"{shot.Shot.Name} Date: {shot.DateReceived}");
+                UserInterface.DisplayUserOptions("No shots have been given to the animal.");
+            }
+            else
+            {
+                foreach (AnimalShot shot in shots.ToList())
+                {
+                    shotInfo.Add($"{shot.Shot.Name} Date: {shot.DateReceived}");
+                }
             }
             if(shotInfo.Count > 0)
             {
                 UserInterface.DisplayUserOptions(shotInfo);
                 if(UserInterface.GetBitData("Would you like to Update shots?"))
                 {
-                    Query.UpdateShot("booster", animal);
+                    Query.UpdateShot(ChooseShot(), animal);
                 }
             }
             else
             {
                 if (UserInterface.GetBitData("Would you like to Update shots?"))
                 {
-                    Query.UpdateShot("booster", animal);
+                    Query.UpdateShot(ChooseShot(), animal);
                 }
             }
             
+        }
+
+        private int ChooseShot()
+        {
+            Console.WriteLine("Please select a corresponding value for the shot you'd like to give. 1: Rabies , 2: Parvovirus, 3: Distemper, 4: Leptospirosis, 5: Panleukopenia");
+            int shotChoose = Int32.Parse(Console.ReadLine());
+
+            switch(shotChoose)
+            {
+                case 1:
+                    return 1;
+                case 2:
+                    return 2;
+                case 3:
+                    return 3;
+                case 4:
+                    return 4;
+                case 5:
+                    return 5;
+                default:
+                    Console.WriteLine("Please enter a valid response");
+                    Console.ReadLine();
+                    ChooseShot();
+                    return 10;
+            }
         }
 
         private void UpdateAnimal(Animal animal, Dictionary<int, string> updates = null)
