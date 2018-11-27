@@ -293,14 +293,27 @@ namespace HumaneSociety
             {
                 var acceptedAdoption = db.Animals.Where(a => a.AnimalId == adoption.AnimalId).FirstOrDefault();
                 acceptedAdoption.AdoptionStatus = "Adopted";
+                var adoptionApprovalStatus = db.Adoptions.Where(u => u.AnimalId == acceptedAdoption.AnimalId).FirstOrDefault();
+                adoptionApprovalStatus.ApprovalStatus = "Adopted";
+                ClearRoom(adoption);
                 db.SubmitChanges();
             }
             else if (decision == false)
             {
                 var declinedAdoption = db.Animals.Where(a => a.AnimalId == adoption.AnimalId).FirstOrDefault();
                 declinedAdoption.AdoptionStatus = "Available";
+                var adoptionApprovalStatus = db.Adoptions.Where(u => u.AnimalId == declinedAdoption.AnimalId).FirstOrDefault();
+                adoptionApprovalStatus.ApprovalStatus = "Declined";
                 db.SubmitChanges();
             }    
+        }
+        internal static void ClearRoom(Adoption adoption)
+        {
+            HumaneSocietyDataContext db = new HumaneSocietyDataContext();
+            int? adoptedAnimal = adoption.AnimalId;
+            var availableRoom = db.Rooms.Where(a => a.AnimalId == adoptedAnimal).FirstOrDefault();
+            availableRoom.AnimalId = null;
+            db.SubmitChanges();
         }
 
         internal static List<AnimalShot> GetShots(Animal animal)
@@ -366,6 +379,16 @@ namespace HumaneSociety
         {
             HumaneSocietyDataContext db = new HumaneSocietyDataContext();
             Room animalRoom = db.Rooms.Where(r => r.AnimalId == animal.AnimalId).FirstOrDefault();
+            if (animalRoom == null)
+            {
+                Room adoptedAnimalRoom = new Room();
+                adoptedAnimalRoom.RoomNumber = 0;
+                adoptedAnimalRoom.AnimalId = animal.AnimalId;
+                // adoptedAnimalRoom.RoomId = db.Rooms.Count() + 1;
+                db.Rooms.InsertOnSubmit(adoptedAnimalRoom);                
+                db.SubmitChanges();
+                animalRoom = adoptedAnimalRoom;
+            }
             return animalRoom;
         }
 
@@ -394,7 +417,12 @@ namespace HumaneSociety
             if (animalToAdopt.AdoptionStatus.ToLower() == "available")
             {
                 db.Adoptions.InsertOnSubmit(adoption);
+                db.SubmitChanges();
                 animalToAdopt.AdoptionStatus = "Pending";
+                adoption.ApprovalStatus = "Pending";
+                adoption.AdoptionFee = 75;
+                adoption.PaymentCollected = true;
+                adoption.AnimalId = animal.AnimalId;
                 adoption.ClientId = client.ClientId;
                 db.SubmitChanges();
             }
