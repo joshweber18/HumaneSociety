@@ -39,8 +39,9 @@ namespace HumaneSociety
         internal static void AddAnimal(Animal animal)
         {
             HumaneSocietyDataContext db = new HumaneSocietyDataContext();
-
             db.Animals.InsertOnSubmit(animal);
+            db.SubmitChanges();
+            animal.AdoptionStatus = "Available";
             db.SubmitChanges();
         }
 
@@ -340,10 +341,30 @@ namespace HumaneSociety
         internal static int GetCategoryId()
         {
             Console.WriteLine("Please select the corresponding value, to assign an animal to a category id.");
-            Console.WriteLine("Dog, Cat, Ferret, Rabbit, Bird");
-            string animalType = Console.ReadLine();
+            Console.WriteLine("Dog, Cat, Ferret, Rabbit, Bird, or Enter the Animal Type");
+            string animalType = Console.ReadLine().ToLower();
             HumaneSocietyDataContext db = new HumaneSocietyDataContext();
-
+            string newAnimal;
+            switch (animalType)
+            {
+                case "dog":
+                    break;
+                case "cat":
+                    break;
+                case "ferret":
+                    break;
+                case "rabbit":
+                    break;
+                case "bird":
+                    break;
+                default:
+                    newAnimal = animalType;
+                    Category newCategory = new Category();
+                    newCategory.Name = newAnimal;
+                    db.Categories.InsertOnSubmit(newCategory);
+                    db.SubmitChanges();
+                    break;
+            }                        
             int id = db.Categories.Where(c => c.Name == animalType).Select(c => c.CategoryId).FirstOrDefault();
             return id;
         }
@@ -399,8 +420,10 @@ namespace HumaneSociety
 
         internal static void RemoveAnimal(Animal animal)
         {
-            HumaneSocietyDataContext db = new HumaneSocietyDataContext();
+            HumaneSocietyDataContext db = new HumaneSocietyDataContext();            
             Animal theAnimal = db.Animals.Where(a => a.AnimalId == animal.AnimalId).FirstOrDefault();
+            var clearRoom = db.Rooms.Where(r => r.AnimalId == theAnimal.AnimalId).FirstOrDefault();
+            clearRoom.AnimalId = null;
             db.Animals.DeleteOnSubmit(theAnimal);
             db.SubmitChanges();
         }
@@ -447,7 +470,7 @@ namespace HumaneSociety
         {
             HumaneSocietyDataContext db = new HumaneSocietyDataContext();
             Random random = new Random();
-            Room room = db.Rooms.Where(r => r.RoomId == random.Next(15)).FirstOrDefault();
+            Room room = db.Rooms.Where(r => r.RoomId == random.Next(15)).First();
             if (room.AnimalId == null)
             {
                 room.AnimalId = animal.AnimalId;
