@@ -196,12 +196,36 @@ namespace HumaneSociety
             Console.WriteLine("Please select the corresponding values, separated by a comma, to search our animals.");
             Console.WriteLine("By Name: 1, Animal Type: 2, Demeanor: 3, Kid Friendly: 4, Pet Friendly: 5, Gender: 6, Adoption Status: 7");
             List<string> searchCriteria = (Console.ReadLine().Split(',').ToList());
+            foreach (string s in searchCriteria)
+            {
+                switch (s)
+                {
+                    case "1":
+                        break;
+                    case "2":
+                        break;
+                    case "3":
+                        break;
+                    case "4":
+                        break;
+                    case "5":
+                        break;
+                    case "6":
+                        break;
+                    case "7":
+                        break;
+                    default:
+                        Console.WriteLine("Please enter a valid response");
+                        Console.ReadLine();
+                        SearchForAnimalByMultipleTraits();
+                        break;
+                }
+            }
             HumaneSocietyDataContext db = new HumaneSocietyDataContext();
             var animals = db.Animals.ToList();
             List<Animal> filteredAnimals = animals;
             foreach (string s in searchCriteria)
             {
-                
                 int searchValue = Int32.Parse(s);
                 switch (searchValue)
                 {
@@ -376,10 +400,33 @@ namespace HumaneSociety
         {
             HumaneSocietyDataContext db = new HumaneSocietyDataContext();
             Random random = new Random();
-            Room room = db.Rooms.Where(r => r.RoomId == random.Next(15)).FirstOrDefault();            
-            //room.RoomId = random.Next(15);
-            room.AnimalId = animal.AnimalId;
+            Room room = db.Rooms.Where(r => r.RoomId == random.Next(15)).FirstOrDefault();
+            if (room.AnimalId == null)
+            {
+                room.AnimalId = animal.AnimalId;
+            }
+            else
+            {
+                SetRoom(animal);
+            }
             db.SubmitChanges();
+        }
+
+        internal static void CheckRoomAvailability()
+        {
+            HumaneSocietyDataContext db = new HumaneSocietyDataContext();
+            List<Room> availableRooms = new List<Room>();
+            foreach (Room a in db.Rooms)
+            {
+                availableRooms = db.Rooms.Where(r => r.AnimalId == null).Select(r=>r).ToList();
+            }
+            if (availableRooms.Count == 0)
+            {
+                Console.WriteLine("Unfortunately, the Humane Society is unable to accept any new animals at this time.");
+                Console.ReadLine();
+                Console.Clear();
+                PointOfEntry.Run();
+            }
         }
     }
 }
