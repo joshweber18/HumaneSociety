@@ -293,12 +293,14 @@ namespace HumaneSociety
             {
                 var acceptedAdoption = db.Animals.Where(a => a.AnimalId == adoption.AnimalId).FirstOrDefault();
                 acceptedAdoption.AdoptionStatus = "Adopted";
+                adoption.ApprovalStatus = "Adopted";
                 db.SubmitChanges();
             }
             else if (decision == false)
             {
                 var declinedAdoption = db.Animals.Where(a => a.AnimalId == adoption.AnimalId).FirstOrDefault();
                 declinedAdoption.AdoptionStatus = "Available";
+                adoption.ApprovalStatus = "Available";
                 db.SubmitChanges();
             }    
         }
@@ -366,6 +368,7 @@ namespace HumaneSociety
         {
             HumaneSocietyDataContext db = new HumaneSocietyDataContext();
             Room animalRoom = db.Rooms.Where(r => r.AnimalId == animal.AnimalId).FirstOrDefault();
+            
             return animalRoom;
         }
 
@@ -387,13 +390,12 @@ namespace HumaneSociety
         internal static void Adopt(Animal animal, Client client)
         {
             HumaneSocietyDataContext db = new HumaneSocietyDataContext();
-            Animal animalToAdopt = animal;
-            Client currentClient = client;
+            //Animal animalToAdopt = animal;
+            //Client currentClient = client;
             var animalAdoption = db.Adoptions.Where(a => a.AnimalId == animal.AnimalId).Single();
             animalAdoption.ClientId = client.ClientId;
-            animalToAdopt = db.Animals.Where(a => (a.Name == animalToAdopt.Name) && (animalToAdopt.AdoptionStatus.ToLower() == "available")).Select(a => a).FirstOrDefault();
-            animalToAdopt.AdoptionStatus = "Pending";
-            
+            animal = db.Animals.Where(a => (a.Name == animal.Name) && (animal.AdoptionStatus.ToLower() == "available")).Select(a => a).FirstOrDefault();
+            animal.AdoptionStatus = "Pending";
             db.SubmitChanges();
         }
         internal static void SetRoom(Animal animal)
