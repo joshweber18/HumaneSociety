@@ -26,7 +26,7 @@ namespace HumaneSociety
         }
         protected override void RunUserMenus()
         {
-            List<string> options = new List<string>() { "What would you like to do? (select number of choice)", "1. Add animal", "2. Remove Anmial", "3. Check Animal Status",  "4. Approve Adoption" };
+            List<string> options = new List<string>() { "What would you like to do? (select number of choice)", "1. Add animal", "2. Remove Animal", "3. Check Animal Status",  "4. Approve Adoption" };
             UserInterface.DisplayUserOptions(options);
             string input = UserInterface.GetUserInput();
             RunUserInput(input);
@@ -235,7 +235,7 @@ namespace HumaneSociety
                 UserInterface.DisplayUserOptions("Animal not found please use different search criteria");
                 return;
             }
-            var animal = animals[0];
+            Animal animal = animals[0];
             List<string> options = new List<string>() { "Animal found:", animal.Name, animal.Category.Name, "would you like to delete?" };
             if ((bool)UserInterface.GetBitData(options))
             {
@@ -243,7 +243,7 @@ namespace HumaneSociety
             }
         }
         private void AddAnimal()
-        {
+        {          
             Console.Clear();
             Animal animal = new Animal();
             animal.CategoryId = Query.GetCategoryId();
@@ -255,7 +255,9 @@ namespace HumaneSociety
             animal.Weight = UserInterface.GetIntegerData("the animal", "the weight of the");
             animal.DietPlanId = Query.GetDietPlanId();
             Query.AddAnimal(animal);
+            Query.SetRoom(animal);
         }
+
         protected override void LogInPreExistingUser()
         {
             List<string> options = new List<string>() { "Please log in", "Enter your username (CaSe SeNsItIvE)" };
@@ -267,7 +269,7 @@ namespace HumaneSociety
             {
                 Console.Clear();
                 employee = Query.EmployeeLogin(userName, password);
-                UserInterface.DisplayUserOptions("Login successfull. Welcome.");
+                UserInterface.DisplayUserOptions("Login successful. Welcome.");
             }
             catch
             {
